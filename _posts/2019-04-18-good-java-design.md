@@ -2,7 +2,7 @@
 
 Has oído la frase "haz que funcione, hazlo correcto y que funcione rápido, en ese orden", en algún punto de carrera de desarrollo. Diré que el autor de esta frase puede ser cualquiera, Kent beck o Butler Lampson's o algún otro, no importa. Lo que a nosotros nos intesera es la interpretación de la misma.
 
-Como desarollador, tal vez inconsientemente, cumples solo la primera parte de esta frase: "haz que funcione". Y las razones pueden ser muchas: estás enfrentándote a un deadline muy próximo, mucha carga de trabajo, desconocimiento de la tecnología utilizada o incluso pordían ser malos hábitos. Esto hasta cierto punto puede entenderse, pero es cierto que tu responsabilidad es avanzar hacia las otras dos premisas conforme ganas experiencia. Si te haces el  hábito de escribir buen código, siguiendo principios de diseño, te ahorrarás tiempo, dinero y quizá malos deseos de aquellos que mantengan tu código en el futuro.
+Como desarollador, y tal vez inconsientemente, cumples solo la primera parte de esta frase: "haz que funcione", y las razones de que así sea pueden ser muchas: estás enfrentándote a un deadline muy próximo, mucha carga de trabajo, desconocimiento de la tecnología utilizada o incluso podrían ser malos hábitos. Esto hasta cierto punto puede entenderse, pero es cierto que tu responsabilidad es avanzar hacia las otras dos premisas conforme ganas experiencia. Si te haces el  hábito de escribir buen código, siguiendo principios de diseño, te ahorrarás tiempo, dinero y quizá malos deseos de aquellos que mantengan tu código en el futuro.
 
 Pero, ¿cómo escribir código Java bien diseñado, que funcione, que sea correcto y además con excelente rendimiento? Es este post veremos una de las forma de lograrlo, la Inmutabilidad.
 
