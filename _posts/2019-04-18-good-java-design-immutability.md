@@ -60,10 +60,10 @@ A ver a ver, un momento, ¿cómo que: aprovechamos para poner el sufijo...? El n
 Podemos remediar el problema con encapsulamiento y mejor aún implementando **inmutabilidad**. En este sentido, otra vez Joshua Bloch recomienda: *"en clases públicas, utiliza métodos accesors, no campos públicos"* y *"Minimiza la mutabilidad"*. Si bien Java soporta inmutabilidad de clases, no nos forza a su utilización, pero nosotros, al escribir nuestros programas, sí podríamos hacerlo, y veremos cómo conseguirlo. Vamos por partes, primero...
 
 ## ¿Qué es una clase inmutable?
-Una clase inmutable es simplemente aquella cuyas instancias no pueden ser modificadas una vez que su información ha sido definida. No habrá ninguna modificación a la misma durante su ciclo de vida. Un ejemplo de clase inmutable en Java es la clase `String`s. Ahora, ...
+Una clase inmutable es simplemente aquella cuyas instancias no pueden ser modificadas una vez que su información ha sido definida. No habrá ninguna modificación a la misma durante su ciclo de vida. Un ejemplo de clase inmutable en Java es la clase `String`. Ahora veamos...
 
 ## ¿Cómo diseñar una clase inmutable?
-Para convertir a los objetos tipo `PersonInfo` de ingenuos desprevenidos a unos bien protegidos debemos seguir varios pasos:
+Para que los objetos de tipo `PersonInfo` pasen de ser ingenuos desprevenidos a bien protegidos debemos seguir varios pasos:
 * Declarar la clase como `final`
 * Cambiar el modificador de acceso de `public` a `private`. Recuerda, minimiza el acceso.
 * Declarar cada atributos como `final`.
@@ -101,18 +101,18 @@ Cuando se cambia el modificador de acceso de los atributos de ~~`public`~~ a `pr
 
 Al marcar como `final` a los atributos de una clase, se asegura que los atributos del objeto no pueden ser modificados una vez que se han definido. En el caso de la clase `PersonInfo`, un constructor ayuda a inicializar los valores de sus atributos. 
 
-**No implementes métodos que modifiquen el estado del objeto**. Como se puede ver, ahora la clase `PersonInfo` no tiene *mutators*. Con este ajuste, quien decide qué si y qué no puede cambiar, es el objeto en sí mismo.
+**No implementes métodos que modifiquen el estado del objeto**. Como se puede ver, ahora la clase `PersonInfo` no tiene *mutators*. Con este ajuste, evitamos cambios al estado del objeto.
 
-Si fuera necesario, la clase expone información solo usando *accesors* considerados como su *API*.
+Si fuera necesario, la clase expone información solo usando *accesors*, que son considerados como su *API*.
 
 Si lo notaste, el *accesor* `getBirthday()` devuelve un `String` y no un `LocalDateTime`. No existe ninguna regla que indique que se deben regresar los atributos de un objeto usando el mismo tipo de dato de dichos atributos. Así que en este caso, encapsulamos el birthday de una persona, exponiendo el dato de mes/año como un `String`. En realidad el `birthday` podría ser un `LocalDateTime` o un timestamp en tipo de dato `long`. Los *clientes* no lo sabrían.
 
 ## Colecciones y parámetros en constructores
-Si la clase que estamos definiendo tiene referencias a objetos mutables (`Collection`s, `StringBuilder`s, por ejemplo) que fueron recibidos como parámetros en constructores o que están expuestos a través de *accesors*, tienes que asegurarte que el objeto tienes **acceso exclusivo** a esto atributos, es decir, el cliente que construye la instancia o pide por el atributo no debe ser capaz de modificar dicho objeto. ¿Cómo lograrlo? **No inicialices un campo con referencias a objetos provistas por los *callers* ** o **no regreses un campo mutable desde un accesor**. Una técnica para asegurar el acceso exclusivo es generar `copias defensivas` de parámetros recibidos en constructores y al devolver atributos en *accesors* y en métodos `readObject` (en caso de serialización).
+Si la clase que estamos definiendo tiene referencias a objetos mutables (`Collection`s, `StringBuilder`s, por ejemplo) que fueron recibidos como parámetros en constructores o que están expuestos a través de *accesors*, tienes que asegurarte que es el objeto el que tiene **acceso exclusivo** a esto atributos. Esto es, el cliente que construye la instancia o pide por el atributo no debe ser capaz de modificar dicho objeto. ¿Cómo lograrlo? **No inicialices un campo con referencias a objetos provistas por los clientes** o **no regreses un campo mutable desde un accesor**. Una técnica para asegurar el acceso exclusivo es generar *copias defensivas* tanto de parámetros mutables recibidos en constructores, como de atributos mutables en *accesors* y en métodos `readObject` (en caso de serialización).
 
 Supongamos que implementamos la siguiente clase como inmutable:
 ```java
-class Student {
+final class Student {
     private final String name;
     private final List<Course> courses;
 
@@ -128,14 +128,21 @@ class Student {
     }
 }
 ```
-¿Es realmente inmutable la clase Student? Sin analizar con detenimiento podrías asegurar que como `courses` es `final`, como se inicializó en el construtor y además no hay ningún *mutator* definido, la lista de cursos a los que un estudiante está inscrito no puede modificarse. Pero aunque lo parezca, la clase no es completamente inmutable. La palabra reservada `final` en un atributo de clase se refiere a que la **referencia** `courses` nunca apuntará a otra colección (`courses = new ArrayList<>()` dispararía un error de compilación) una vez que ha sido definida. Pero lo ha quedado desprotegido aquí no es la referencia, sino el contenido de la lista de cursos, perdiendo la exclusividad en el acceso a la misma, como se ve en el siguiente y malicioso código de un *caller*:
+¿Es realmente inmutable la clase Student? Sin analizar con detenimiento podrías asegurar que como `courses` es `final`, como se inicializó en el construtor y además no hay ningún *mutator* definido, la lista de cursos a los que un estudiante está inscrito no puede modificarse. 
+Pero aunque lo parezca, la clase `Student` no es completamente inmutable. La palabra reservada `final` en un atributo de clase permite que una **referencia**, en este caso `courses`, nunca apuntará a otro objeto o tendrá otro valor una vez que ha sido definida (por ejemplo, `courses = new ArrayList<>()` dispararía un error de compilación). Si bien la referencia se ha protegido, lo ha quedado desprotegido aquí es el objeto al que apunta, la lista de cursos, perdiendo así la exclusividad en el acceso a la misma. Esto se ve en el siguiente código de un malicioso *caller*:
 
 ```java
-    //Soy un profesor que tengo que completar mi número de alumnos para
-    // mi no muy apreciado curso y así recibir mi bono. A ver, a ver, agregaré
-    // mi curso a este inocente chico.
-    student.getCourses().add(new Course("Project Management"));
-   
+class Teacher {
+
+    /**
+     * Soy un profesor que tengo que completar mi número de alumnos para
+     * mi no muy apreciado curso y así recibir mi bono. Fácil, agregaré
+     * mi curso al primer inocente chico.
+    public void addACourseToANaiveStudent() { 
+        allMyStudents().get(0).getCourses().add(new Course("Project Management"));
+        log.info("Venga mi bono");
+   }
+   ...
 ```
 
 Si fueras tú el estudiante en cuestión y al final del semestre recibieras una nota reprobatoria de un curso que ni siquiera registraste, o peor aun, que algún *caller* decida eliminar tus cursos con un `student.getCourses().clear()` y con eso ya no aparecieras en las listas de los profesores, ¿qué dirías? ¿crees que tus internals estaban suficientemente protegidos? Como comenté, la técnica de hacer *copia defensiva* en constructores o accesors puede librarte de estos peligros:
@@ -147,12 +154,12 @@ Si fueras tú el estudiante en cuestión y al final del semestre recibieras una 
 ```
 
 ## Paralelización
-Desde Java 8 ya contamos con un estilo funcional de programación (FP) *out-of-the-box* a través del API de Stream y las expresiones Lambda (repito, es un *estilo funcional* porque Java no es y creo que nunca será un lenguaje funcional puro). Aunado a la FP, desde hace mucho tenemos un entorno de programacion `multi-thread` para procesamiento paralelo; los objetos inmutables encajan perfecto aquí, porque se aseguran `thread-safe`. No importa cuántos clientes accedan de forma simultánea a nuestros objetos inmutables, sus atributos expuestos son de solo lectura y no cambian.
+Otro beneficio de los objetos inmutables es su uso en la paralelización. Desde Java 8 ya contamos con un estilo funcional de programación (FP) *out-of-the-box* a través del API de Stream y las expresiones Lambda (repito, es un *estilo funcional* porque Java no es y creo que nunca será un lenguaje funcional puro) y de mucho más atrás tenemos programacion `multi-thread`; ¿y por qué los objetos inmutables encajan perfecto aquí?, porque se aseguran `thread-safety`. No importa cuántos clientes accedan de forma simultánea a nuestros objetos inmutables, sus atributos expuestos son de solo lectura y no cambian.
 
 ## Conclusión
 Implementar código endeble y vulnerable que no considera buenas prácticas de OOP, puede traer consecuencias al momento de ser expuesto a clientes *potencialmente* maliciosos. Este tipo de código da libertad a que agentes externos manipulen el estado de nuestros objetos o que al depurarlo, para encontrar en qué punto alguien le agregó o quitó algo, resulte en un verdadero dolor de cabeza.
 
-Sin embargo, el código que tiene presente buenas prácticas, incluídos el encapsulamiento y la inmutabilidad que hemos revisado, trae muchos beneficios, como los siguientes: 
+Sin embargo, el código que tiene presente buenas prácticas, en este caso la inmutabilidad, trae muchos beneficios, como los siguientes: 
 * Los objetos son los mismos durante todo su ciclo de vida
 * Se mantiene oculto el detalle de la implementación
 * Solo expone lo que es necesario
@@ -161,10 +168,11 @@ Sin embargo, el código que tiene presente buenas prácticas, incluídos el enca
 * Es más seguro
 * Fácil de probar
 * Tiene bajo acoplamiento
-* Es Thread-Safe
+* Es thread-safe
 * Puede mejora el rendimiento limitando el número de copias del objeto, como en el caso de los `String`s
 * Fácil de depurar
 * Previene side-effects
+* Perfecto para paralelizar
  
 Happy codding!!!
 
