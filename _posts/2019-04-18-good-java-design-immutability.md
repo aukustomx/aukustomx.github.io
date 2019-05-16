@@ -1,10 +1,10 @@
-Has oído la frase *"haz que funcione, hazlo correcto y que funcione rápido, en ese orden"*. ¿Quién la dijo? Kent beck o Butler Lampson's o algún otro, no importa. Lo que nos interesa es el fondo de la misma.
+Has oído la frase *"haz que funcione, hazlo correcto y que funcione rápido, en ese orden"*, por Kent beck o Butler Lampson's. 
 
 Como desarrollador, y tal vez de forma inconsiente, podríamos estar cumpliendo solo con la primera parte de esta frase: *"haz que funcione"*, y olvidar las otras dos; y pueden ser por muchas razones: un deadline muy próximo, carga de trabajo, desconocimiento de la tecnología utilizada o incluso malos hábitos. Comprensible. No obstate, mi responsabilidad y la tuya es avanzar hacia las otras dos premisas. Si te haces el hábito de escribir código que sigue principios de diseño y buenas prácticas de programación, te ahorrarás, entre muchas otras cosas, estrés, tiempo, dinero y hasta uno que otro insulto remoto de quienes mantengan tu código en el futuro.
 
 Pero, ¿cómo escribir código que cumpla esta frase? En este post veremos una de las muchas prácticas para lograrlo, la **Inmutabilidad**.
 
-En OOP, la idea principal es abtraer un problema como objetos del mundo real. Los objetos son considerados *first-class citizens*, con sus atributos (propiedades) y métodos (comportamiento). Pero, como en el mundo real, hay cierta información de los objetos que deben mantenerse ocultos (encapsulamiento) y libres de cambios (invariants), y el mundo exterior no debe (o al menos no debería) conocerlos. Cuando digo *libres de cambios* me refiero a que desde su creación y durante el ciclo de vida del objeto, no deben mutar.
+En OOP, la idea principal es abstraer un problema como objetos del mundo real. Los objetos son considerados *first-class citizens*, con sus atributos (propiedades) y métodos (comportamiento). Pero, como en el mundo real, hay cierta información de los objetos que deben mantenerse ocultos (encapsulamiento) y libres de cambios (invariants), y el mundo exterior no debe (o al menos no debería) conocerlos. Cuando digo *libres de cambios* me refiero a que desde su creación y durante el ciclo de vida, el objeto no debe mutar.
 
 ## ¿Cómo logramos crear objetos inmutables?
 Analicemos el siguiente código:
@@ -50,14 +50,14 @@ class LoggingService {
 	recordPersonInfo(personInfo.birthday);
 
         //Aprovechamos para poner el sufijo _logged para marcar
-        // a la persona como procesada
+        // a la persona como procesada por el servicio de logging
         personInfo.name = personInfo.name + "_logged";
     }
 ```
 
-A ver a ver, un momento, ¿cómo que: aprovechamos para poner el sufijo...? El nombre en un objeto `PersonInfo` no debería cambiar. Sin embargo aquí ha ocurrido y sus *invariants*, pues... han variado. Los atributos de `PersonInfo` están expuestos de tal manera que cualquier otro objeto puede manipularlos arbitrariamente. ¿Querrías tú que alguien cambiara tu nombre de esta manera? Creo que no.
+A ver a ver, un momento, ¿cómo que: aprovechamos para poner el sufijo...? El nombre en un objeto `PersonInfo` no debería cambiar. Sin embargo aquí ha ocurrido y los *invariants* del objeto, pues... han variado. Los atributos de `PersonInfo` están expuestos de tal manera que cualquier otro objeto puede manipularlos arbitrariamente. ¿Querrías tú que alguien cambiara tu nombre de esta manera? Creo que no.
 
-Podemos remediar el problema con encapsulamiento y mejor aún implementando **inmutabilidad**. En este sentido, otra vez Joshua Bloch recomienda: *"en clases públicas, utiliza métodos accesors, no campos públicos"* y *"Minimiza la mutabilidad"*. Si bien Java soporta inmutabilidad de clases, no nos forza a su utilización, pero nosotros, al escribir nuestros programas, sí podríamos hacerlo, y veremos cómo conseguirlo. Vamos por partes, primero...
+Podemos remediar el problema con encapsulamiento y mejor aún implementando **inmutabilidad**. En este sentido, otra vez Joshua Bloch recomienda: *"en clases públicas, utiliza métodos accesors, no uses campos públicos"* y *"Minimiza la mutabilidad"*. Si bien Java soporta inmutabilidad de clases, no nos forza a su utilización, pero nosotros, al escribir nuestros programas, sí podríamos hacerlo, y veremos cómo conseguirlo. Vamos por partes, primero...
 
 ## ¿Qué es una clase inmutable?
 Una clase inmutable es simplemente aquella cuyas instancias no pueden ser modificadas una vez que su información ha sido definida. No habrá ninguna modificación a la misma durante su ciclo de vida. Un ejemplo de clase inmutable en Java es la clase `String`. Ahora veamos...
@@ -105,7 +105,7 @@ Al marcar como `final` a los atributos de una clase, se asegura que los atributo
 
 Si fuera necesario, la clase expone información solo usando *accesors*, que son considerados como su *API*.
 
-Si lo notaste, el *accesor* `getBirthday()` devuelve un `String` y no un `LocalDateTime`. No existe ninguna regla que indique que se deben regresar los atributos de un objeto usando el mismo tipo de dato de dichos atributos. Así que en este caso, encapsulamos el birthday de una persona, exponiendo el dato de mes/año como un `String`. En realidad el `birthday` podría ser un `LocalDateTime` o un timestamp en tipo de dato `long`. Los *clientes* no lo sabrían.
+Si lo notaste, el *accesor* `getBirthday()` devuelve un `String` y no un `LocalDateTime`. No existe ninguna regla que indique que se deben regresar los atributos de un objeto usando el mismo tipo de dato de dichos atributos. Así que en este caso, encapsulamos el birthday de una persona, exponiendo el dato de mes/año como un `String`. En realidad el `birthday` podría ser un `LocalDateTime` o un `timestamp` en tipo de dato `long`. Los *clientes* no lo sabrían.
 
 ## Colecciones y parámetros en constructores
 Si la clase que estamos definiendo tiene referencias a objetos mutables (`Collection`s, `StringBuilder`s, por ejemplo) que fueron recibidos como parámetros en constructores o que están expuestos a través de *accesors*, tienes que asegurarte que es el objeto el que tiene **acceso exclusivo** a esto atributos. Esto es, el cliente que construye la instancia o pide por el atributo no debe ser capaz de modificar dicho objeto. ¿Cómo lograrlo? **No inicialices un campo con referencias a objetos provistas por los clientes** o **no regreses un campo mutable desde un accesor**. Una técnica para asegurar el acceso exclusivo es generar *copias defensivas* tanto de parámetros mutables recibidos en constructores, como de atributos mutables en *accesors* y en métodos `readObject` (en caso de serialización).
@@ -128,16 +128,16 @@ final class Student {
     }
 }
 ```
-¿Es realmente inmutable la clase Student? Sin analizar con detenimiento podrías asegurar que como `courses` es `final`, como se inicializó en el construtor y además no hay ningún *mutator* definido, la lista de cursos a los que un estudiante está inscrito no puede modificarse. 
-Pero aunque lo parezca, la clase `Student` no es completamente inmutable. La palabra reservada `final` en un atributo de clase permite que una **referencia**, en este caso `courses`, nunca apuntará a otro objeto o tendrá otro valor una vez que ha sido definida (por ejemplo, `courses = new ArrayList<>()` dispararía un error de compilación). Si bien la referencia se ha protegido, lo ha quedado desprotegido aquí es el objeto al que apunta, la lista de cursos, perdiendo así la exclusividad en el acceso a la misma. Esto se ve en el siguiente código de un malicioso *caller*:
+¿Es realmente inmutable la clase Student? Sin analizar con detenimiento podrías asegurar que como `courses` es `final`, como se inicializó en el construtor y además como no hay ningún *mutator* definido, la lista de cursos a los que un estudiante está inscrito no puede modificarse. 
+Pero aunque lo parezca, la clase `Student` no es completamente inmutable. La palabra reservada `final` en un atributo de clase garantiza que una **referencia**, en este caso `courses`, nunca apunte a otro objeto o tenga otro valor una vez que ha sido definida (por ejemplo, `courses = new ArrayList<>()` dispararía un error de compilación). Si bien la referencia se ha protegido, lo ha quedado desprotegido aquí es el objeto al que apunta, la lista de cursos como tal, perdiendo así la exclusividad en el acceso a la misma. Esto se ve en el siguiente código de un malicioso *caller*:
 
 ```java
 class Teacher {
 
     /**
-     * Soy un profesor que tengo que completar mi número de alumnos para
+     * Como profesor tengo que completar mi número de alumnos para
      * mi no muy apreciado curso y así recibir mi bono. Fácil, agregaré
-     * mi curso al primer inocente chico.
+     * mi curso al primer inocente de mi lista de estudiantes.
     public void addACourseToANaiveStudent() { 
         allMyStudents().get(0).getCourses().add(new Course("Project Management"));
         log.info("Venga mi bono");
@@ -145,7 +145,7 @@ class Teacher {
    ...
 ```
 
-Si fueras tú el estudiante en cuestión y al final del semestre recibieras una nota reprobatoria de un curso que ni siquiera registraste, o peor aun, que algún *caller* decida eliminar tus cursos con un `student.getCourses().clear()` y con eso ya no aparecieras en las listas de los profesores, ¿qué dirías? ¿crees que tus internals estaban suficientemente protegidos? Como comenté, la técnica de hacer *copia defensiva* en constructores o accesors puede librarte de estos peligros:
+Si fueras tú el estudiante en cuestión y al final del semestre recibieras una nota reprobatoria de un curso que ni siquiera registraste, o peor aun, que algún *caller* decida eliminar tus cursos con un `student.getCourses().clear()` y con eso ya no aparecieras en las listas de los profesores, ¿qué dirías? ¿crees que tus *internals* estaban suficientemente protegidos? Como comenté, la técnica de hacer *copias defensivas* en constructores o accesors puede librarte de estos peligros:
 
 ```java
     public List<Courses> getCourses() {
@@ -174,5 +174,6 @@ Sin embargo, el código que tiene presente buenas prácticas, en este caso la in
 * Previene side-effects
 * Perfecto para paralelizar
  
-Happy codding!!!
+Así que te invito a que, en la medida de lo posible, y donde aplique la técnica de la inmutabilidad, la implementes.
 
+Happy codding!!!
