@@ -169,7 +169,7 @@ Sin embargo, el código que tiene presente buenas prácticas, en este caso la in
 * Fácil de probar
 * Tiene bajo acoplamiento
 * Es thread-safe
-* Puede mejora el rendimiento limitando el número de copias del objeto, como en el caso de los `String`s
+* Puede mejorar el rendimiento, limitando el número de copias del objeto, como en el caso de los `String`s
 * Fácil de depurar
 * Previene side-effects
 * Perfecto para paralelizar
