@@ -156,6 +156,13 @@ Si fueras tú el estudiante en cuestión y al final del semestre recibieras una 
 ## Paralelización
 Otro beneficio de los objetos inmutables es su uso en la paralelización. Desde Java 8 ya contamos con un estilo funcional de programación (FP) *out-of-the-box* a través del API de Stream y las expresiones Lambda (repito, es un *estilo funcional* porque Java no es y creo que nunca será un lenguaje funcional puro) y de mucho más atrás tenemos programacion `multi-thread`; ¿y por qué los objetos inmutables encajan perfecto aquí?, porque se aseguran `thread-safety`. No importa cuántos clientes accedan de forma simultánea a nuestros objetos inmutables, sus atributos expuestos son de solo lectura y no cambian.
 
+## ¿Desventajas?
+La única desventaja real de utilizar objetos immutables sería que si después de haber sido concebidos como inmutables, ahora sea necesario mutar el estado de estos objetos (sus atributos), habrá que crear nuevos objetos y/o hacer una refactorización del código que los utiliza. Crear objetos puede resultar costoso (no siempre cierto para objetos inmutables debido a las optimizaciones de la JVM y GC), especialmente para aquellos que son bastante grandes y de los cuales solo *mutaría* una pequeña cantidad de sus atributos. La concatenación de `String`s (que son inmutables), por ejemplo, en un proceso de miles o millones de cadenas sería ineficiente. Usar un `StringBuilder` (mutable), es más adecuado en este escenario. 
+
+La clave radica en evaluar la naturaleza del dominio de negocio de los objetos; validar si estos deben o no mutar. Por ejemplo, para una aplicación de control de peso, el atributo `peso` de un objeto `Persona` no debe ser inmutable, no aplica, puesto que una persona sube o baja de peso. Así que, hay que usar la inmutabilidad donde sea pertinente y no en todos lados. Pero entre menos mutable sea nuestro modelo, más ventajas obtendremos.
+
+Para el caso de la creación de objetos de clases que tienen muchos atributos, inicializarlos a través de un constructor puede caer en el antipattern *Telescoping Constructor* o *constructor telescópico*, pero esto más que una desventaja, es un problema de legibilidad y mantenimiento del código, además de no ser exclusivo de objetos inmutables. Para solucionarlo, el patrón "Builder" es la solución *de facto*.
+
 ## Conclusión
 Implementar código endeble y vulnerable que no considera buenas prácticas de OOP, puede traer consecuencias al momento de ser expuesto a clientes *potencialmente* maliciosos. Este tipo de código da libertad a que agentes externos manipulen el estado de nuestros objetos o que al depurarlo, para encontrar en qué punto alguien le agregó o quitó algo, resulte en un verdadero dolor de cabeza.
 
