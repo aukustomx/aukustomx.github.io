@@ -1,5 +1,3 @@
-# Good Java Design - Immutability
-
 Habrás oído muchas veces la frase [*"haz que funcione, hazlo correcto y que funcione rápido, en ese orden"*](http://wiki.c2.com/?MakeItWorkMakeItRightMakeItFast), por Kent Beck o Butler Lampson's. 
 
 Como desarrollador, y tal vez de forma inconsciente, podríamos estar cumpliendo solo con la primera parte de esta frase: *"haz que funcione"*, y olvidar las otras dos; y puede ser por muchas razones: un deadline muy próximo, carga de trabajo, desconocimiento de la tecnología utilizada o incluso malos hábitos. Comprensible. No obstante, mi responsabilidad y la tuya es avanzar hacia las otras dos premisas. Si te haces el hábito de escribir código que sigue principios de diseño y buenas prácticas de programación, te ahorrarás, entre muchas otras cosas, estrés, tiempo, dinero y hasta algún comentario incómodo de quienes mantengan tu código en el futuro.
