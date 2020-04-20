@@ -12,7 +12,8 @@ En una aplicación donde sea necesario concatenar pocas cadenas y con bajísima 
 
 Algunos de estos problemas pueden ser, por ejemplo, demasiado trabajo al GC, altos tiempos de respuesta, utilización excesiva de memoria, cpu, entre otros.
 
-##El operador `+` en los  `String`s
+## El operador `+` en los  `String`s
+
 En Java, utilizar el operador `+` sobre `String`s para concatenarlas es equivalente a usar el método [`String::concat`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#concat(java.lang.String\)). Revisemos lo que sucede en una concatenación con el operador `+`:
 
 ```java
@@ -75,7 +76,7 @@ $ java BadConcatenation.java
 Time: 6067 ms
 ```
 
-##La clase `StringBuilder`
+## La clase `StringBuilder`
 
 La clase `StringBuilder` es utilizada para crear cadenas mutables (modificables). Es un símil de la clase `StringBuffer` excepto que no es sincronizada.
 Para nuestro ejemplo no necesitamos recrear la cadena cada vez, solo ir agregando a la parte final de una sola cadena.
@@ -123,7 +124,8 @@ Por otro lado, se observa que al utilizar un `StringBuilder` para esta tarea, el
 
 Nota: Las instancias de `StringBuilder` no son thread-safe. Si se requiere sincronización, entonces se recomienda usar `StringBuffer`. 
 
-##Conclusiones
+## Conclusiones
+
 Por todo lo anterior podemos concluir que, cuando exista la necesidad de realizar concatenación de `String`s dentro de ciclos, y ciclos con muchas iteraciones, hay que decidirse por `StringBuilder` en lugar del operador `+`.
 
 Es importante mencionar que, cuando la concatenación no suceda dentro un ciclo, [es admisible usar el operador `+`](https://dzone.com/articles/string-concatenation-performacne-improvement-in-ja). Además, si los elementos que se concatenan son pocos, la legibilidad del código es mejor con el operador `+` que con un `StringBuilder`. Este es un ejemplo:
