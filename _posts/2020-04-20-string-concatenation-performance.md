@@ -140,6 +140,6 @@ var concatenated = new StringBuilder().append("Hello").append(" ").append("world
 
 Pero repito, **esto cuando no sea dentro de un ciclo**.
 
-##Referencias
+## Referencias
 * https://docs.oracle.com/javase/specs/jls/se8/html/jls-4.html#jls-4.3.3
 * https://dzone.com/articles/string-concatenation-performacne-improvement-in-ja
