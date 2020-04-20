@@ -114,11 +114,12 @@ Time: 6 ms
 
 ## Comparativa de performance
 Teóricamente, con los resultados de la dos implementaciones anteriores, podríamos decir que se pueden completar 1000+ concatenaciones con un `StringBuilder` cuando solo se puede completar 1 con el operador `+`. ¡Interesante, no!
+
 En un ejercicio por comparar cuál es el tiempo de ejecución total que toma concatenar la cadena `"Hello world!"` usando el operador `+` vs. utilizar un `StringBuilder`, con un número de concatenaciones igual a `10_000`, `20_000`, `30_000`, `...`, hasta `1_000_000`, los resultados se reflejan en la siguiente gráfica:
 
 ![String concatenation creation]({{ site.url }}/img/string_concatenation_comparative.png)
 
-Como puede observarse en la gráfica, utilizar el operador `+` al concatenar la cadena `"Hello world!"`,  incrementa el tiempo total como más implementaciones sean necesarias. Usando este operador, la prueba se detuvo cuando el número de concatenaciones solicitado era cercano a `500_000`; tomó casi 3.5 minutos.
+Como puede observarse en la gráfica, utilizar el operador `+` al concatenar la cadena `"Hello world!"`,  incrementa el tiempo total entre más implementaciones sean necesarias. Usando este operador, la prueba se detuvo cuando el número de concatenaciones solicitado era cercano a `500_000`; tomó casi 3.5 minutos.
 
 Por otro lado, se observa que al utilizar un `StringBuilder` para esta tarea, el tiempo de respuesta máximo fue de 20 ms (0.0003333 minutos) incluso cuando hubo que concatenar la cadena `1_000_000` de veces.
 
