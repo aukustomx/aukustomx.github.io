@@ -4,7 +4,7 @@ La inmutabilidad de los `String`s en Java tiene ventajas, tales como la reutiliz
 
 En este post nos centraremos en la concatenación de cadenas dentro de un ciclo.
 
-Por ejemplo, si creamos una cadena: `String cad1 = "Hola"` (primera instancia `String`) y deseamos concatenarla con la cadena `" mundo!"` (segunda instancia `String`), haciendo `cad1 = cad1 + " mundo!"` se crearía una tercera instancia (`"Hola mundo!"`); la primera y la segunda instancia son marcadas para ser recolectadas por el `GC`.
+Por ejemplo, si creamos una cadena: `String cad1 = "Hola"` (primera instancia `String`) y deseamos concatenarla con la cadena `" mundo!"` (segunda instancia `String`), haciendo `cad1 = cad1 + " mundo!"` se crearía una tercera instancia (`"Hola mundo!"`).
 
 ![String concatenation creation]({{ site.url }}/img/string_concatenation_objects.jpg) 
 
