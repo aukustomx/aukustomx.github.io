@@ -364,7 +364,7 @@ Using rich domain models adds meaninful semantics to our objects, improves abstr
 implementation details from the clients of our classes, reduces duplicated code, protects the invariants of our
 objects and gives us many other advantages.
 
-Whth rich domain models our models go from being just data structures to being a true representation of the real world
+With rich domain models our models go from being just data structures to being a true representation of the real world
 object, an object with state and behavior.
 
 So, let's stop creating poor, anemic models and start choosing rich models.
