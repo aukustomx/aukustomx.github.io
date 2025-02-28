@@ -3,7 +3,7 @@ In Java, exceptions are a powerful tool designed to handle unexpected situations
 
 That said, exceptions are the right tool when dealing with business rule violations in a Spring Boot REST service. In this article, we’ll explore why using exceptions for control flow is bad practice and how you can properly use them in a Spring Boot application.
 
-# Why Using Exceptions for Control Flow Is an Antipattern
+# Why Using Exceptions for Control Flow Is an Anti-pattern
 
 ### 1. Performance Overhead
    Java’s exception handling involves creating a stack trace and unwinding the call stack, making it much slower than using simple conditional statements. If exceptions are used frequently in regular program logic, this can hurt performance.
