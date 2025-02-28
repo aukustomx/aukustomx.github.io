@@ -3,7 +3,7 @@ In Java, exceptions are a powerful tool designed to handle unexpected situations
 
 That said, exceptions are the right tool when dealing with business rule violations in a Spring Boot REST service. In this article, we’ll explore why using exceptions for control flow is bad practice and how you can properly use them in a Spring Boot application.
 
-# Why Using Exceptions for Control Flow Is an Anti-pattern
+# Why Using Exceptions for Control Flow Is an Antipattern
 
 ### 1. Performance Overhead
    Java’s exception handling involves creating a stack trace and unwinding the call stack, making it much slower than using simple conditional statements. If exceptions are used frequently in regular program logic, this can hurt performance.
@@ -12,7 +12,7 @@ That said, exceptions are the right tool when dealing with business rule violati
    Using exceptions as control flow obscures intent, making it harder to understand what the code does. Developers expect exceptions to represent unexpected failures, not routine logic.
 
 ### 3. Loss of Intent
-   When exceptions are used in place of standard checks, the code loses clarity. It becomes unclear whether an exception is signaling a critical failure or just controlling program flow.
+A well-written codebase should clearly express its intent, making it easy for other developers to understand without unexpected surprises. In this case, a simple conditional statement is often more straightforward and readable than using exceptions to control the flow. This aligns with the [Principle of least astonishment](https://en.wikipedia.org/wiki/Principle_of_least_astonishment), which advocates for minimizing unexpected behavior in code.
    
 # Bad Example: Using Exceptions for Control Flow
 
@@ -50,12 +50,11 @@ if (input.matches("\\d+")) {
 }
 ```
 
-* No exceptions are needed for a normal situation
-* More readable and efficient
+- No exceptions are needed for a normal situation.
+- More readable and efficient.
 
-# When Exceptions Are the Right Tool: Business Rule Violations in Spring Boot
-
-When Exceptions Are the Right Tool: Business Rule Violations in Spring Boot
+# When Exceptions Are the Right Tool: Business Rule Violations
+While exceptions should not be used for regular control flow, they are useful in cases where you need to stop execution due to an invalid business state.
 
 ### Example: Business Exceptions in a Spring Boot REST Service
 Imagine you’re developing an order processing service. If an order is invalid, you don’t want to continue processing; instead, you should immediately stop and return an appropriate error response.
@@ -87,13 +86,13 @@ public class OrderService {
             throw new BusinessException(BusinessResponseCode.INVALID_ORDER, "Order is not valid");
         }
 
-        // Continue processing order...
+        // More processing order code...
     }
 }
 ```
 
-- Short-circuits execution if a business rule is violated <br/>
-- No unnecessary try-catch blocks in the service layer <br/>
+- Short-circuits execution if a business rule is violated.
+- No unnecessary try-catch blocks in the service layer.
 
 ### 3. Handle the Exception Globally in a Controller Advice
 ```java
@@ -105,10 +104,12 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(ex.getResponseCode(), ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+    
+    //Other exception handlers...
 }
 ```
-- Centralized error handling
-- Structured and meaningful HTTP response
+- Centralized error handling.
+- Structured and meaningful HTTP response for clients.
 
 # Conclusion
 ### Avoid using exceptions for control flow because:
@@ -121,4 +122,4 @@ public class GlobalExceptionHandler {
 - They keep service methods clean and focused.
 - They enable centralized error handling for meaningful API responses.
 
-By following these principles, you ensure that exceptions serve their intended purpose, keeping your Java applications efficient, maintainable, and robust.
+By following these principles, you ensure that exceptions serve their intended purpose, keeping your Java solutions efficient, maintainable, and robust.
