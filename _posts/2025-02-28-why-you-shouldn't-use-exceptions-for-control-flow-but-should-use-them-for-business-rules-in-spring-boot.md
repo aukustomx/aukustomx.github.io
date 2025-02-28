@@ -1,20 +1,20 @@
 # Introduction
 In Java, exceptions are a powerful tool designed to handle unexpected situations. However, using exceptions as a control flow mechanism is considered an antipattern due to performance costs, readability issues, and maintainability concerns.
 
-That said, exceptions are the right tool when dealing with business rule violations in a Spring Boot REST service. In this article, we’ll explore why using exceptions for control flow is bad practice and how you can properly use them in a Spring Boot application.
+That said, exceptions are a right tool when dealing with business rule violations in a Spring Boot REST service. In this article, we’ll explore why using exceptions for control flow is bad practice and how you can properly use them in a Spring Boot application.
 
-# Why Using Exceptions for Control Flow Is an Antipattern
+# Why using exceptions for control flow is an antipattern
 
-### 1. Performance Overhead
+### 1. Performance overhead
    Java’s exception handling involves creating a stack trace and unwinding the call stack, making it much slower than using simple conditional statements. If exceptions are used frequently in regular program logic, this can hurt performance.
 
-### 2. Readability & Maintainability
+### 2. Readability and maintainability
    Using exceptions as control flow obscures intent, making it harder to understand what the code does. Developers expect exceptions to represent unexpected failures, not routine logic.
 
-### 3. Loss of Intent
+### 3. Loss of intent
 A well-written codebase should clearly express its intent, making it easy for other developers to understand without unexpected surprises. In this case, a simple conditional statement is often more straightforward and readable than using exceptions to control the flow. This aligns with the [Principle of least astonishment](https://en.wikipedia.org/wiki/Principle_of_least_astonishment), which advocates for minimizing unexpected behavior in code.
    
-# Bad Example: Using Exceptions for Control Flow
+# Bad example: Using exceptions for control flow
 
 Here’s an example of an incorrect use of exceptions to handle an expected scenario:
 ```java
@@ -36,7 +36,8 @@ try {
 The invalid input is not an exceptional case; it’s just an incorrect user input that should be validated before parsing.
 The NumberFormatException should not be part of control flow because it introduces unnecessary overhead.
 
-# Better Alternative (Using Conditional Check Instead of Exception
+# Better alternative
+Using conditional check instead of exception.
 ```java
 String input = "abc";
 int value;
@@ -53,13 +54,13 @@ if (input.matches("\\d+")) {
 - No exceptions are needed for a normal situation.
 - More readable and efficient.
 
-# When Exceptions Are the Right Tool: Business Rule Violations
+# When exceptions are the right tool: Business rule violations
 While exceptions should not be used for regular control flow, they are useful in cases where you need to stop execution due to an invalid business state.
 
-### Example: Business Exceptions in a Spring Boot REST Service
+### Right Example: Business exceptions in a Spring Boot REST Service
 Imagine you’re developing an order processing service. If an order is invalid, you don’t want to continue processing; instead, you should immediately stop and return an appropriate error response.
 
-### 1. Create a Custom Business Exception
+### 1. Create a custom business exception
 ```java
 public class BusinessException extends RuntimeException {
     private final BusinessResponseCode responseCode;
@@ -76,7 +77,7 @@ public class BusinessException extends RuntimeException {
 ```
 This custom exception allows us to encapsulate business-related errors in a structured way.
 
-### 2. Throw the Exception in the Service Layer
+### 2. Throw the exception in the service layer
 ```java
 @Service
 public class OrderService {
@@ -94,7 +95,7 @@ public class OrderService {
 - Short-circuits execution if a business rule is violated.
 - No unnecessary try-catch blocks in the service layer.
 
-### 3. Handle the Exception Globally in a Controller Advice
+### 3. Handle the exception globally in a Controller Advice
 ```java
 @RestControllerAdvice
 public class GlobalExceptionHandler {
