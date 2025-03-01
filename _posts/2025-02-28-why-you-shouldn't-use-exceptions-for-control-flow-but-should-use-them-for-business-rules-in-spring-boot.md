@@ -14,7 +14,7 @@ That said, exceptions are a right tool when dealing with business rule violation
 ### 3. Loss of intent
 A well-written codebase should clearly express its intent, making it easy for other developers to understand without unexpected surprises. In this case, a simple conditional statement is often more straightforward and readable than using exceptions to control the flow. This aligns with the [Principle of least astonishment](https://en.wikipedia.org/wiki/Principle_of_least_astonishment), which advocates for minimizing unexpected behavior in code.
    
-# Bad example: Using exceptions for control flow
+## Bad example: Using exceptions for control flow
 
 Here’s an example of an incorrect use of exceptions to handle an expected scenario:
 ```java
@@ -31,12 +31,12 @@ try {
 }
 ```
 
-# Why is this bad?
+### Why is this bad?
 
 The invalid input is not an exceptional case; it’s just an incorrect user input that should be validated before parsing.
 The NumberFormatException should not be part of control flow because it introduces unnecessary overhead.
 
-# Better alternative
+### Better alternative
 Using conditional check instead of exception.
 ```java
 String input = "abc";
@@ -54,7 +54,7 @@ if (input.matches("\\d+")) {
 - No exceptions are needed for a normal situation.
 - More readable and efficient.
 
-# When exceptions are the right tool: Business rule violations
+# Exceptions as a right tool for Business rule violations
 While exceptions should not be used for regular control flow, they are useful in cases where you need to stop execution due to an invalid business state.
 
 ### Right Example: Business exceptions in a Spring Boot REST Service
