@@ -113,14 +113,8 @@ public class GlobalExceptionHandler {
 - Structured and meaningful HTTP response for clients.
 
 # Conclusion
-### Avoid using exceptions for control flow because:
-- It introduces performance overhead.
-- It makes code harder to read and maintain.
-- It misuses exceptions for routine logic.
+Avoid using exceptions for control flow because it introduces performance overhead, makes code harder to read and maintain, misuses exceptions for routine logic.
 
-### Use exceptions when dealing with business rule violations in Spring Boot because
-- They allow you to stop execution cleanly when an invalid business state is reached.
-- They keep service methods clean and focused.
-- They enable centralized error handling for meaningful API responses.
+Use exceptions when dealing with business rule violations in Spring Boot because, allow you to stop execution cleanly when an invalid business state is reached, keep service methods clean and focused, enable centralized error handling for meaningful API responses.
 
 By following these principles, you ensure that exceptions serve their intended purpose, keeping your Java solutions efficient, maintainable, and robust.
