@@ -1,13 +1,3 @@
----
-title: "Arquitectura Hexagonal y Feature Flags: Construyendo Sistemas Flexibles y Mantenibles"
-date: 2026-01-16
-author: "Tu Nombre"
-tags: ["arquitectura", "hexagonal", "ports-and-adapters", "feature-flags", "solid", "typescript"]
-description: "Un caso de estudio práctico sobre cómo combinar Arquitectura Hexagonal, principios SOLID y Feature Flags para construir sistemas desacoplados y ágiles en producción."
----
-
-# Arquitectura Hexagonal y Feature Flags: Construyendo Sistemas Flexibles y Mantenibles
-
 *Un caso de estudio práctico para desacoplar la lógica de negocio y agilizar los lanzamientos.*
 
 ## Introducción: El Problema del Acoplamiento
